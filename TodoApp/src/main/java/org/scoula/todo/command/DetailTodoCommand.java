@@ -8,7 +8,7 @@ import org.scoula.todo.domain.Todo;
 
 // 메뉴2. 상세 Command 클래스
 public class DetailTodoCommand implements Command {
-    TodoDao dao = TodoDao.getInstance();
+    TodoDao dao = TodoListDao.getInstance();
 
     @Override
     public void execute(){

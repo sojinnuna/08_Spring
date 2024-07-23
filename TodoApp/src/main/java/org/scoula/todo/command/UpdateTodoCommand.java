@@ -8,7 +8,7 @@ import org.scoula.todo.domain.Todo;
 
 // 메뉴4. 수정 Command 클래스
 public class UpdateTodoCommand implements Command {
-    TodoDao dao = TodoDao.getInstance();
+    TodoDao dao = TodoListDao.getInstance();
 
     @Override
     public void execute() {int id = Input.getInt("수정할 Id: ");

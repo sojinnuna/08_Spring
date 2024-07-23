@@ -2,12 +2,13 @@ package org.scoula.todo.command;
 
 import org.scoula.lib.cli.command.Command;
 import org.scoula.lib.cli.ui.Input;
+import org.scoula.todo.dao.TodoDao;
 import org.scoula.todo.dao.TodoListDao;
 import org.scoula.todo.domain.Todo;
 
 // 메뉴3. 추가 Command 클래스
 public class AddTodoCommand implements Command {
-    TodoListDao dao = TodoListDao.getInstance();
+    TodoDao dao = TodoListDao.getInstance();
 
     @Override
     public void execute() {
@@ -27,4 +28,6 @@ public class AddTodoCommand implements Command {
 
         System.out.println();
     }
+
+
 }
