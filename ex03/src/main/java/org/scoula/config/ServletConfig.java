@@ -1,6 +1,9 @@
 package org.scoula.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
@@ -10,9 +13,12 @@ import org.springframework.web.servlet.view.JstlView;
 
 import java.rmi.registry.Registry;
 
+// @EnableWebMvc: mvc 패턴(frontcontroller 패턴) 사용하겠다
 @EnableWebMvc
+//해당 패키지 내부에서 컴포넌트를 찾아라
 @ComponentScan(basePackages = {
         "org.scoula.controller",
+        "org.scoula.exception",
         "org.scoula.ex03.controller"
 })
 public class ServletConfig implements WebMvcConfigurer {
@@ -33,4 +39,9 @@ public void configureViewResolvers(ViewResolverRegistry registry){
     bean.setSuffix(".jsp");
     registry.viewResolver(bean);
 }
+    @Bean
+    public MultipartResolver multipartResolver(){
+        StandardServletMultipartResolver resolver = new StandardServletMultipartResolver();
+        return resolver;
+    }
 }
