@@ -11,34 +11,36 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
-import java.rmi.registry.Registry;
-
 @EnableWebMvc
-@ComponentScan(basePackages = {
-        "org.scoula.controller",
-        "org.scoula.exception"
-})
+@ComponentScan(basePackages = {"org.scoula.controller",
+                               "org.scoula.exception",
+                               "org.scoula.board.controller"}) // 경로에 따라 다름
 public class ServletConfig implements WebMvcConfigurer {
 
     @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry){
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry
-                .addResourceHandler("/resources/**") // url이 /resources/로 시작하는 경로
-                .addResourceLocations("/resources"); // webapp/resources/ 경로
+             .addResourceHandler("/resources/**")
+             .addResourceLocations("/resources/");
     }
 
     // jsp view resolver 설정
+
     @Override
-    public void configureViewResolvers(ViewResolverRegistry registry){
+    public void configureViewResolvers(ViewResolverRegistry registry) {
         InternalResourceViewResolver bean = new InternalResourceViewResolver();
+
         bean.setViewClass(JstlView.class);
-        bean.setPrefix("/WEB-INF/views/");
+        bean.setPrefix("/WEB-INF/views/"); // 경로에 따라 다름
         bean.setSuffix(".jsp");
+
         registry.viewResolver(bean);
     }
+
     @Bean
     public MultipartResolver multipartResolver(){
-        StandardServletMultipartResolver resolver = new StandardServletMultipartResolver();
+        StandardServletMultipartResolver resolver
+                = new StandardServletMultipartResolver();
         return resolver;
     }
 }

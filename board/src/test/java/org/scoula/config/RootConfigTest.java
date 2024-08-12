@@ -11,21 +11,22 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.sql.DataSource;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes= {RootConfig.class})
+@ContextConfiguration(classes= {RootConfig.class}) // 테스트에서 사용할 설정 클래스
 @Log4j
 class RootConfigTest {
 
     @Autowired
+    private DataSource dataSource;
+    @Autowired
     private SqlSessionFactory sqlSessionFactory;
 
-    @Autowired
-    private DataSource dataSource;
     @Test
     @DisplayName("DataSource 연결이 된다.")
     public void dataSource() throws SQLException {
@@ -38,8 +39,8 @@ class RootConfigTest {
     @Test
     public void testSqlSessionFactory() {
         try (
-                SqlSession session = sqlSessionFactory.openSession();
-                Connection con = session.getConnection();
+            SqlSession session = sqlSessionFactory.openSession();
+            Connection con = session.getConnection();
         ) {
             log.info(session);
             log.info(con);
@@ -47,6 +48,5 @@ class RootConfigTest {
             fail(e.getMessage());
         }
     }
-
 
 }

@@ -2,23 +2,46 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="org.scoula.board.mapper.BoardMapper">
-    <select id="getList" resultType="BoardVO">
- <![CDATA[
-        select * from tbl_board
-        ]]>
- </select>
-
-    <select id="get" resultType="BoardVO">
-        select * from tbl_board where no = #{no}
-    </select>
-
+<!--    no는 자동증가 값이라 생략-->
+<!--    LAST_INSERT_ID : 가장 최근에 발급된 아이디-->
+<!--    keyProperty: vo객체의 key는 어디에 있는지(setNo로 값을 넣어라)-->
+<!--    keyColumn : 테이블의 퀄럼명이 뭔지-->
+<!--    order: 이 쿼리를 언제시작할 건지(after : insert문 후에 실행)-->
     <insert id="create">
-        insert into tbl_board (title, content, writer)
+        insert into tbl_board (title, content,writer)
         values (#{title}, #{content}, #{writer})
 
         <selectKey resultType="Long" keyProperty="no" keyColumn="no" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
     </insert>
+
+<!--    tbl_board의 no가 일치하는 행에서 title,content,writer 컬럼을 우리가 넣어준 값으로 수정-->
+<!--    update,date는 현재 시간으로 수정-->
+    <update id="update">
+        update tbl_board set
+             title = #{title},
+             content = #{content},
+             writer = #{writer},
+             update_date = now()
+        where no = #{no}
+    </update>
+
+<!--    해당 no 컬럼과 일치하는 행을 삭제-->
+    <delete id="delete">
+        delete from tbl_board where no = #{no}
+    </delete>
+
+    <select id="getList" resultType="org.scoula.board.domain.BoardVO">
+        <![CDATA[
+            select * from tbl_board
+            order by no desc
+        ]]>
+    </select>
+
+    <select id="get" resultType="BoardVO">
+        select * from tbl_board where no = #{no}
+    </select>
 </mapper>
