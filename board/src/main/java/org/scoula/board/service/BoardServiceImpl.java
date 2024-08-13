@@ -2,12 +2,17 @@ package org.scoula.board.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
+import org.scoula.board.domain.BoardAttachmentVO;
 import org.scoula.board.domain.BoardVO;
 import org.scoula.board.dto.BoardDTO;
 import org.scoula.board.mapper.BoardMapper;
+import org.scoula.common.util.UploadFiles;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 
+import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -17,7 +22,8 @@ import java.util.Optional;
 @RequiredArgsConstructor // final 필드로 생성자 추가
 public class BoardServiceImpl implements BoardService {
 //    생성자가 하나 있다면 그 생성자로 주입 가능
-    final private BoardMapper mapper;
+private final static String BASE_DIR = "c:/upload/board";
+final private BoardMapper mapper;
 
     @Override
     public List<BoardDTO> getList() {
@@ -36,14 +42,22 @@ public class BoardServiceImpl implements BoardService {
                 .orElseThrow(NoSuchElementException::new);
     }
 
+    // 2개 이상의 insert 문이 실행될 수 있으므로 트랜잭션 처리 필요
+// RuntimeException인 경우만 자동 rollback.
+    @Transactional
     @Override
     public void create(BoardDTO board) {
         log.info("create......" + board);
+
 //        DTO를 VO로 변경해서 mapper의 메소드 호출
-        BoardVO vo = board.toVo();
-        mapper.create(vo);
-//        변경된 vo의 no를 가져와서 다시 dto에 반영
-        board.setNo(vo.getNo());
+        BoardVO boardVO = board.toVo();
+        mapper.create(boardVO);
+
+        // 파일 업로드 처리
+        List<MultipartFile> files = board.getFiles();
+        if (files != null && !files.isEmpty()) { // 첨부 파일이 있는 경우
+            upload(boardVO.getNo(), files);
+        }
     }
 
     @Override
@@ -58,4 +72,28 @@ public class BoardServiceImpl implements BoardService {
         log.info("delete...." + no);
         return mapper.delete(no) == 1;
     }
-}
+
+    private void upload(Long bno, List<MultipartFile> files) {
+        for (MultipartFile part: files) {
+            if (part.isEmpty()) continue;
+            try {
+                String uploadPath = UploadFiles.upload(BASE_DIR, part);
+                BoardAttachmentVO attach = BoardAttachmentVO.of(part, bno, uploadPath);
+                mapper.createAttachment(attach);
+            } catch (IOException e) {
+                throw new RuntimeException(e);   // @Transactional에서감지, 자동rollback
+            }
+        }
+    }
+        // 첨부파일 한 개 얻기
+        @Override
+        public BoardAttachmentVO getAttachment (Long no){
+            return mapper.getAttachment(no);
+        }
+        // 첨부파일 삭제
+        @Override
+        public boolean deleteAttachment (Long no){
+            return mapper.deleteAttachment(no) == 1;
+        }
+    }
+

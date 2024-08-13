@@ -12,6 +12,18 @@
         <fmt:formatDate pattern="yyyy-MM-dd" value="${board.regDate}"/>
     </div>
 </div>
+
+<div class="text-end">
+    <c:forEach var="file" items="${board.attaches}">
+        <div class="attach-file-item">
+            <a href="/board/download/${file.no}" class="file-link">
+                <i class="fa-solid fa-floppy-disk"></i>
+                    ${file.filename} (${file.fileSize})<br>
+            </a>
+        </div>
+    </c:forEach>
+</div>
+
 <hr>
 <div>
     ${board.content}
@@ -22,14 +34,10 @@
     <a href="update?no=${board.no}" class="btn btn-primary"><i class="far fa-edit"></i> 수정</a>
     <a href="delete?no=${board.no}" class="btn btn-primary"><i class="fas fa-trash-alt"></i> 삭제</a>
 </div>
-<%@include file="../layouts/footer.jsp"%>
-<div class="mt-4">
-    <a href="list" class="btn btn-primary"><i class="fas fa-list"></i> 목록</a>
-    <a href="update?no=${board.no}" class="btn btn-primary"><i class="far fa-edit"></i> 수정</a>
-    <a href="#" class="btn btn-primary delete"><i class="fas fa-trash-alt"></i> 삭제</a>
-</div>
+
 <form action="delete" method="post" id="deleteForm">
     <input type="hidden" name="no" value="${board.no}"/>
 </form>
+
 <script src="/resources/js/board.js"></script>
 <%@include file="../layouts/footer.jsp"%>
