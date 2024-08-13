@@ -32,7 +32,7 @@ public class BoardDTO {
     // VO  DTO 변환
     public static BoardDTO of(BoardVO vo) {
 //        vo가 null 이면 null 반환, null이 아니면 BoardDTO로 변환해줌
-        return BoardDTO.builder()
+        return vo == null ? null : BoardDTO.builder()
                 .no(vo.getNo())
                 .title(vo.getTitle())
                 .content(vo.getContent())

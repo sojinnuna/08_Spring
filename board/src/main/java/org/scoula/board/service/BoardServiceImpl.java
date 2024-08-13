@@ -73,12 +73,17 @@ final private BoardMapper mapper;
         return mapper.delete(no) == 1;
     }
 
+//    해당 게시물에 참조 파일들을 참조해주는 메서드
     private void upload(Long bno, List<MultipartFile> files) {
         for (MultipartFile part: files) {
+//            첨부파일 목록에서 파일을 하나씩 꺼내서 비어있는지 확인
+//            비어있으면 다음 파일 확인
             if (part.isEmpty()) continue;
             try {
+//                업로드 경로 생성 후 BoardAttachmentVO 객체 생성
                 String uploadPath = UploadFiles.upload(BASE_DIR, part);
                 BoardAttachmentVO attach = BoardAttachmentVO.of(part, bno, uploadPath);
+//                BoardAttachment 테이블에 참조파일 데이터 하나 추가
                 mapper.createAttachment(attach);
             } catch (IOException e) {
                 throw new RuntimeException(e);   // @Transactional에서감지, 자동rollback

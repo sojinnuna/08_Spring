@@ -41,26 +41,33 @@
         ]]>
     </select>
 
+<!--    #{} 부분에는 매번 넣어주는 변수가 들어간다 -->
+<!--    board 테이블과 board_attachment 테이블을 조인해서 같이 조회한다 -->
+<!--    첨부파일이 없는 게시글도 있으므로 board 테이블 기준으로 outer join 시킨다 -->
     <select id="get" resultType="BoardVO">
         select * from tbl_board where no = #{no}
     </select>
 
+<!--    tbl_board_attachment 테이블에 하나의 행을 추가한다-->
     <insert id="createAttachment">
         insert into tbl_board_attachment(filename, path, content_type, size, bno)
         values(#{filename}, #{path}, #{contentType}, #{size}, #{bno})
     </insert>
 
+<!--    해당 게시글 번호(bno)와 일치하는 첨부파일 목록을 가져온다 -->
     <select id="getAttachmentList" resultType="BoardAttachmentVO">
         select * from tbl_board_attachment
         where bno = #{bno} // 글번호로 찾는 방법
         order by filename
     </select>
 
+<!--    해당 파일 번호(no)와 일치하는 첨부 파일을 가져온다 -->
     <select id="getAttachment" resultType="BoardAttachmentVO">
         select * from tbl_board_attachment
         where no = #{no} // PK로 찾는 방법
     </select>
 
+<!--    해당 파일 번호(no)와 일치하는 첨부 파일을 삭제한다 -->
     <delete id="deleteAttachment">
         delete from tbl_board_attachment
         where no = #{no}
