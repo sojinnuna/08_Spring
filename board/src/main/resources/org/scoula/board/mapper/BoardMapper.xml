@@ -44,8 +44,18 @@
 <!--    #{} 부분에는 매번 넣어주는 변수가 들어간다 -->
 <!--    board 테이블과 board_attachment 테이블을 조인해서 같이 조회한다 -->
 <!--    첨부파일이 없는 게시글도 있으므로 board 테이블 기준으로 outer join 시킨다 -->
-    <select id="get" resultType="BoardVO">
-        select * from tbl_board where no = #{no}
+<!--    <select id="get" resultType="BoardVO">-->
+<!--        select * from tbl_board where no = #{no}-->
+<!--    </select>-->
+
+    <select id="get" resultMap="boardMap">
+        select b.*, a.no as ano, a.bno, a.filename, a.path,
+               a.content_type, a.size, a.reg_date as a_reg_date
+        from tbl_board b
+                 left outer join tbl_board_attachment a
+                                 on b.no = a.bno
+        where b.no = #{no}
+        order by filename
     </select>
 
 <!--    tbl_board_attachment 테이블에 하나의 행을 추가한다-->

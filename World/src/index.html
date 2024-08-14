@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <title>김소진의 미니홈피 :: 사이좋은 사람들, 싸이월드</title>
+    <link href="styles/index.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/c6fe2d1888.js" crossorigin="anonymous"></script>
+    <script src="index.js"></script>
+</head>
+<body>
+<div class="background">
+    <div class="outerbox">
+        <div class="wrapper">
+            <div class="wrapper__left">
+                <div class="wrapper__left__header">
+                    <!-- TODAY 0 | TOTAL 12345 -->
+                    <div class="today">
+                        <sapn>TODAY</sapn>
+                        <sapn>0</sapn>
+                        <sapn> | TOTAL</sapn>
+                        <sapn>12345</sapn>
+                    </div>
+                </div>
+                <div class="wrapper__left__body">
+                    <div class="left__body__header">
+                        <div class="left__body__header_gray"></div>
+                        <div class="left__body__header_line"></div>
+                    </div>
+                    <div class="left__body__profile">
+                        <i class="fa-sharp fa-regular fa-user"> 이름</i>
+                        <i class="fa-sharp fa-regular fa-bell"> Phone</i>
+                        <i class="fa-sharp fa-regular fa-envelope"> E-mail</i>
+                        <i class="fa-regular fa-heart"> 인스타그램</i>
+                    </div>
+                    <div class="left__body__footer">
+                        <p style="font-size: 11px; color: gray; padding-bottom: 10px;">오늘의 기분<br></p>
+                        <div>
+                            <select class="selectBox">
+                                <optgroup label ="오늘의 기분">
+                                    <option>기쁨 😊</option>
+                                    <option>슬픔 😢</option>
+                                    <option>지루함 😒</option>
+                                    <option>즐거움 🤣</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="wrapper__right">
+                <div class="wrapper__right__header">
+                    <div class="right__header__title"><b>사이좋은 사람들, 싸이월드</b></div>
+                    <div class="right__header__setup">사생활보호설정▶</div>
+                </div>
+                <div class="wrapper__right__body">
+                    <iframe id="contentFrame" src="home.html"></iframe>
+                </div>
+            </div>
+            <div class="navigation">
+                <div class="navigation_item" id="menuHome" onclick="menuHome()">홈</div>
+                <div class="navigation_item" id="menuJukebox" onclick="menuJukebox()">쥬크박스</div>
+                <div class="navigation_item" id="menuGame" onclick="menuGame()">게임</div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

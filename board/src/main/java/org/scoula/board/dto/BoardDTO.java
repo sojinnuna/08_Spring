@@ -26,7 +26,6 @@ public class BoardDTO {
     private Date updateDate;
 
     // 첨부파일
-    private List<BoardAttachmentVO> attaches;
     List<MultipartFile> files = new ArrayList<>(); // 실제업로드된파일(Multipart)목록
 
     // VO  DTO 변환
@@ -54,5 +53,7 @@ public class BoardDTO {
                 .updateDate(updateDate)
                 .build();
     }
+
+    private List<BoardAttachmentVO> attaches;
 }
 

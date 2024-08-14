@@ -2,15 +2,17 @@ package org.scoula.board.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
+import org.scoula.board.domain.BoardAttachmentVO;
 import org.scoula.board.dto.BoardDTO;
 import org.scoula.board.service.BoardService;
+import org.scoula.common.util.UploadFiles;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 
 @Controller
 @Log4j
@@ -69,5 +71,12 @@ public class BoardController {
 
     }
 
+    @GetMapping("/download/{no}")
+    @ResponseBody // view를사용하지않고, 직접내보냄
+    public void download(@PathVariable("no") Long no, HttpServletResponse response) throws Exception {
+        BoardAttachmentVO attach = service.getAttachment(no);
+        File file = new File(attach.getPath());
+        UploadFiles.download(response, file, attach.getFilename());
+    }
 }
 
