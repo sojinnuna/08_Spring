@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--DTD : Document Type Definition, 문서 타입 정의-->
+<!--mybatis 구성 파일이 유효한지 검사-->
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <settings>
+        <!--        my_batis -> myBatis(스네이크케이스를 카멜케이스로 변환)-->
+        <setting name="mapUnderscoreToCamelCase" value="true" />
+    </settings>
+
+    <typeAliases>
+        <!--        별칭으로 만들어서 mapper 타입을 간략히 사용할 수 있게 해줌-->
+        <package name="org.scoula.security.account.domain"/>
+    </typeAliases>
+</configuration>

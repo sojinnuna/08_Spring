@@ -1,0 +1,21 @@
+@import url('//fonts.googleapis.com/earlyaccess/notosanskr.css');
+
+*{
+    font-family: 'Noto Sans KR';
+}
+
+.avatar-sm{
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
+.jumbotron{
+    background-image: url("/resources/images/background.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    color: white;
+    padding: 2rem;
+    margin-top: 1.5rem;
+}

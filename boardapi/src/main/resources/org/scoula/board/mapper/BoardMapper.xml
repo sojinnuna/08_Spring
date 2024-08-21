@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.scoula.board.mapper.BoardMapper">
+<!--    no는 자동증가 값이라 생략-->
+<!--    LAST_INSERT_ID : 가장 최근에 발급된 아이디-->
+<!--    keyProperty: vo객체의 key는 어디에 있는지(setNo로 값을 넣어라)-->
+<!--    keyColumn : 테이블의 퀄럼명이 뭔지-->
+<!--    order: 이 쿼리를 언제시작할 건지(after : insert문 후에 실행)-->
+    <insert id="create">
+        insert into tbl_board (title, content,writer)
+        values (#{title}, #{content}, #{writer})
+
+        <selectKey resultType="Long" keyProperty="no" keyColumn="no" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+<!--    tbl_board의 no가 일치하는 행에서 title,content,writer 컬럼을 우리가 넣어준 값으로 수정-->
+<!--    update,date는 현재 시간으로 수정-->
+    <update id="update">
+        update tbl_board set
+             title = #{title},
+             content = #{content},
+             writer = #{writer},
+             update_date = now()
+        where no = #{no}
+    </update>
+
+<!--    해당 no 컬럼과 일치하는 행을 삭제-->
+    <delete id="delete">
+        delete from tbl_board where no = #{no}
+    </delete>
+
+    <select id="getList" resultType="org.scoula.board.domain.BoardVO">
+        <![CDATA[
+            select * from tbl_board
+            order by no desc
+        ]]>
+    </select>
+
+<!--    #{} 부분에는 매번 넣어주는 변수가 들어간다 -->
+<!--    board 테이블과 board_attachment 테이블을 조인해서 같이 조회한다 -->
+<!--    첨부파일이 없는 게시글도 있으므로 board 테이블 기준으로 outer join 시킨다 -->
+<!--    <select id="get" resultType="BoardVO">-->
+<!--        select * from tbl_board where no = #{no}-->
+<!--    </select>-->
+
+    <select id="get" resultMap="boardMap">
+        select b.*, a.no as ano, a.bno, a.filename, a.path,
+               a.content_type, a.size, a.reg_date as a_reg_date
+        from tbl_board b
+                 left outer join tbl_board_attachment a
+                                 on b.no = a.bno
+        where b.no = #{no}
+        order by filename
+    </select>
+
+<!--    tbl_board_attachment 테이블에 하나의 행을 추가한다-->
+    <insert id="createAttachment">
+        insert into tbl_board_attachment(filename, path, content_type, size, bno)
+        values(#{filename}, #{path}, #{contentType}, #{size}, #{bno})
+    </insert>
+
+<!--    해당 게시글 번호(bno)와 일치하는 첨부파일 목록을 가져온다 -->
+    <select id="getAttachmentList" resultType="BoardAttachmentVO">
+        select * from tbl_board_attachment
+        where bno = #{bno} // 글번호로 찾는 방법
+        order by filename
+    </select>
+
+<!--    해당 파일 번호(no)와 일치하는 첨부 파일을 가져온다 -->
+    <select id="getAttachment" resultType="BoardAttachmentVO">
+        select * from tbl_board_attachment
+        where no = #{no} // PK로 찾는 방법
+    </select>
+
+<!--    해당 파일 번호(no)와 일치하는 첨부 파일을 삭제한다 -->
+    <delete id="deleteAttachment">
+        delete from tbl_board_attachment
+        where no = #{no}
+    </delete>
+
+    <resultMap id="attachmentMap" type="org.scoula.board.domain.BoardAttachmentVO">
+        <id column="ano" property="no"/>
+        <result column="bno" property="bno"/>
+        <result column="filename" property="filename"/>
+        <result column="path"  property="path"/>
+        <result column="contentType" property="contentType"/>
+        <result column="size" property="size"/>
+        <result column="a_reg_date"  property="regDate"/>
+    </resultMap>
+
+    <resultMap id="boardMap" type="org.scoula.board.domain.BoardVO">
+        <id column="no" property="no"/>
+        <result column="title"  property="title"/>
+        <result column="content" property="content"/>
+        <result column="writer"  property="writer"/>
+        <result column="reg_date" property="regDate"/>
+        <result column="update_date" property="updateDate"/>
+        <collection property="attaches" resultMap="attachmentMap"/>
+    </resultMap>
+
+</mapper>
